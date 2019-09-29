@@ -1,5 +1,22 @@
 #include "Conta.h"
-//#include "Movimentacao.h"
+
+Data obterData() {
+
+	Data x;
+
+	time_t t = time(NULL);
+	struct tm* date = localtime(&t);
+
+	x.time = t;
+	x.seg = date->tm_sec;
+	x.min = date->tm_min;
+	x.hor = date->tm_hour;
+	x.dia = date->tm_mday;
+	x.mes = date->tm_mon;
+	x.ano = date->tm_year;
+
+	return x;
+}
 
 Conta::Cliente::Cliente() {
 }
@@ -54,14 +71,15 @@ void Conta::Cliente::Set_Fone(string fone) {
 }
 
 Conta::Movimentacao::Movimentacao() {
+
+	_Data = obterData();
 	_Debito_Credito = 'N';
 	_Valor = 0;
 }
 
 Conta::Movimentacao::Movimentacao(string descricao, char debito_credito, double valor) {
-	//Data D1;
-	//D1.Obter_Data();
-	//_Data = D1;
+
+	_Data = obterData();
 	_Descricao = descricao;
 	_Debito_Credito = debito_credito;
 	_Valor = valor;
@@ -79,12 +97,9 @@ double Conta::Movimentacao::Get_Valor() {
 	return _Valor;
 }
 
-/*
-string Conta::Movimentacao::Get_Data(){
-	return _Data.Get_data();
+Data Conta::Movimentacao::Get_Data(){
+	return _Data;
 }
-
-*/
 
 int Conta::_Proximo_num_conta = 0;
 
@@ -98,7 +113,7 @@ Conta::Conta() {
 Conta::Conta(double saldo, Cliente cliente, static int proximoNumConta) {
 
     _Num_conta = _Proximo_num_conta;
-	_Cliente = cliente;
+	_Cliente = Cliente(cliente);
     _Saldo = saldo;
 	proximoNumConta++;
 }
@@ -115,23 +130,55 @@ string Conta::Get_cliente(){
     return _Cliente.Get_nome();
 }
 
-/*
-void Conta::Debitar(double valor, string descricao){
-	double saldo;
-	saldo = this->_Saldo;
-		if(saldo - valor >= 0){
-			this->_Saldo = saldo - valor;
-			 Movimentacao M1;
-			 M1.Criar_mov(descricao,'D', valor);
-			 Movimentacoes.push_back(M1);
-		}else
-			this->_Saldo = saldo;
+bool Conta::Debitar(double valor, string descricao){
+
+	if ((_Saldo - valor) < 0) {
+
+		return false;
+	}
+
+	else {
+
+		_Saldo -= valor;
+		_Movimentacoes.push_back(Movimentacao(descricao, 'D', valor));
+
+		return true;
+	}
 }
 
 void Conta::Creditar(double valor, string descricao){
-		this->_Saldo += valor;
-		Movimentacao M1;
-		M1.Criar_mov(descricao,'C', valor);
-		Movimentacoes.push_back(M1);
+	
+	_Saldo += valor;
+	_Movimentacoes.push_back(Movimentacao(descricao, 'C', valor));
 }
-*/
+
+vector<Conta::Movimentacao> Conta::extrato() {
+
+	return _Movimentacoes;
+}
+
+vector<Conta::Movimentacao> Conta::extrato(Data inicio) {
+
+	vector<Movimentacao> ext;
+
+	for (Movimentacao i : _Movimentacoes) {
+
+		if (difftime(inicio.time, i.Get_Data().time) > 0)
+			ext.push_back(i);
+	}
+
+	return ext;
+}
+
+vector<Conta::Movimentacao> Conta::extrato(Data inicio, Data fim) {
+
+	vector<Movimentacao> ext;
+
+	for (Movimentacao i : _Movimentacoes) {
+
+		if ((difftime(inicio.time, i.Get_Data().time) > 0) && (difftime(i.Get_Data().time, fim.time) < 0))
+			ext.push_back(i);
+	}
+
+	return ext;
+}

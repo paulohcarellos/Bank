@@ -3,8 +3,21 @@
 
 #include <string>
 #include <vector>
+#include <ctime>
 
 using namespace std;
+
+struct Data {
+
+	time_t time;
+
+	int seg;
+	int min;
+	int hor;
+	int dia;
+	int mes;
+	int ano;
+};
 
 class Conta {
 	
@@ -13,6 +26,7 @@ class Conta {
 		class Cliente {
 
 		private:
+
 			string _Nome_cliente;
 			string _Cpf_cnpj;
 			string _Endereco;
@@ -31,31 +45,32 @@ class Conta {
 			string Get_Cpf_cnpj();
 			string Get_Endereco();
 			string Get_Fone();
-			//Cliente operator=(Cliente&);
 
 		};
 
 		class Movimentacao {
 
 		private:
-			//Data _Data;
+
+			Data _Data;
 			string _Descricao;
 			char _Debito_Credito;
 			double _Valor;
 
 		public:
+
 			Movimentacao();
 			Movimentacao(string descricao, char debito_Credito, double valor);
 			string Get_Descricao();
 			char Get_Debito_Credito();
 			double Get_Valor();
-			//string Get_Data();
+			Data Get_Data();
 		};
 
 		int _Num_conta;
 		double _Saldo;
 		Cliente _Cliente;
-		//vector<Movimentacao> Movimentacoes;
+		vector<Movimentacao> _Movimentacoes;
 		static int _Proximo_num_conta;
 
 
@@ -67,9 +82,11 @@ class Conta {
 		int Get_Numero_conta();
 		double Get_saldo();
 		string Get_cliente();	
-		//void Debitar(double, string);
-		//void Creditar(double, string);
-		//Movimentacao extrato1(string, string);
+		bool Debitar(double, string); //Retorna true/false dependendo do sucesso da operacao
+		void Creditar(double, string);
+		vector<Movimentacao> extrato();
+		vector<Movimentacao> extrato(Data inicio);
+		vector<Movimentacao> extrato(Data inicio, Data fim);
 };
 
 #endif // CONTA_H
