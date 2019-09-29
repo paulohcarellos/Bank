@@ -1,12 +1,7 @@
 #include <iostream>
-#include <stdio.h>
 #include <string>
-#include "cliente.h"
-#include<windows.h>
-#include "Movimentacao.h"
+#include <windows.h>
 #include "Conta.h"
-
-
 
 using namespace std;
 
@@ -24,8 +19,8 @@ int main()
     //cout << "cliente = " << C1.Get_nome() << "cpf = " << C1.Get_Cpf_cnpj() << "endereco = " << C1.Get_Endereco() << "fone = " << C1.Get_Fone() << endl;
     //C1.Set_Nome("Gustavo");
     //cout << "cliente = " << C1.Get_nome() << "cpf = " << C1.Get_Cpf_cnpj() << "endereco = " << C1.Get_Endereco() << "fone = " << C1.Get_Fone() << endl;//
-    Movimentacao M1;
-    M1.Criar_mov("MD", '0', 200000);
-    cout << "descricao = " << M1.Get_Descricao() << "debitocredito = " << M1.Get_Debito_Credito() << "valor = " << M1.Get_Valor() << "data = " << M1.Get_Data() << endl;
-return 0;
+    //Movimentacao M1;
+    //M1.Criar_mov("MD", '0', 200000);
+    //cout << "descricao = " << M1.Get_Descricao() << "debitocredito = " << M1.Get_Debito_Credito() << "valor = " << M1.Get_Valor() << "data = " << M1.Get_Data() << endl;
+	return 0;
 }
