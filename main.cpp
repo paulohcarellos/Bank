@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
-#include <windows.h>
-#include "Conta.h"
+#include "Banco.h"
 
 using namespace std;
 
