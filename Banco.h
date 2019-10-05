@@ -1,25 +1,18 @@
-#ifndef CONTA_H
-#define CONTA_H
+#ifndef BANCO_H
+#define BANCO_H
+#pragma warning(disable:4996)
 
 #include <string>
 #include <vector>
-#include <ctime>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include "Date.h"
 
 using namespace std;
 
-struct Data {
-
-	time_t time;
-
-	int seg;
-	int min;
-	int hor;
-	int dia;
-	int mes;
-	int ano;
-};
-
 class Banco {
+
 
 public:
 
@@ -56,27 +49,33 @@ public:
 
 		private:
 
-			Data _Data;
 			string _Descricao;
 			char _Debito_Credito;
-			double _Valor;
+			double _Valor;	
+			Data _Data;
 
 		public:
 
 			Movimentacao();
-			Movimentacao(string descricao, char debito_Credito, double valor);
-			string Get_Descricao();
-			char Get_Debito_Credito();
+			Movimentacao(string descricao, char dc, double valor);
+			Movimentacao(string descricao, char dc, double valor, Data data);
 			double Get_Valor();
+			char Get_Debito_Credito();
+			string Get_Descricao();
 			Data Get_Data();
 		};
 
-		Conta(Banco::Cliente &cliente);
+		Conta();
+		Conta(Banco::Cliente& cliente);
+		Conta(int num, double saldo, Banco::Cliente& c);
 		int Get_Numero_conta();
+		int Get_prox();
+		void Set_prox(int num);
 		double Get_saldo();
 		Banco::Cliente Get_cliente();
 		bool Debitar(double, string); //Retorna true/false dependendo do sucesso da operacao
 		void Creditar(double, string);
+		void extrato(vector<Movimentacao> set);
 		vector<Movimentacao> extrato();
 		vector<Movimentacao> extrato(Data inicio);
 		vector<Movimentacao> extrato(Data inicio, Data fim);
@@ -91,14 +90,15 @@ public:
 
 	};
 
+	Banco();
 	Banco(string nome);
-	void inserirCliente(Cliente &x);
-	void criarConta(Cliente &x);
+	void inserirCliente(Cliente x);
+	void criarConta(Cliente& x);
 	void excluirCliente(string cpf);
 	void excluirConta(int nConta);
 	void deposito(int nConta, double valor);
-	void saque(int nConta, double valor);
-	void transferencia(int c1, int c2, double valor);
+	bool saque(int nConta, double valor);
+	bool transferencia(int c1, int c2, double valor);
 	void tarifa();
 	void CPMF();
 	double saldo(int nConta);
@@ -107,8 +107,17 @@ public:
 	vector<Conta::Movimentacao> extrato(int nConta, Data inicio, Data fim);
 	vector<Cliente> clientes();
 	vector<Conta> contas();
-	void save();
-	void load();
+	int findCliente(string cpf);
+	int findCliente(Cliente x);
+	int findConta(int conta);
+	bool checkCliente(string cpf);
+	bool checkCliente(Cliente x);
+	bool checkConta(int conta);
+	bool checkConta(string cpf);
+	Cliente* cliente(int i);
+	Conta* conta(int i);
+	void save(string file);
+	void load(string file);
 
 
 private:
@@ -119,4 +128,4 @@ private:
 
 };
 
-#endif // CONTA_H
+#endif // BANCO_H
