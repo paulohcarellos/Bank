@@ -10,24 +10,24 @@ void Interface::cadastrar_cliente(Banco& b) {
 
 	cin.ignore();
 	cout << "\n\n\n\tCADASTRAR CLIENTE\n" << endl;
-	cout << "\t Digite o nome:";
+	cout << "\t Digite o nome: ";
 	getline(cin, nome);
-	cout << "\t Digite o cpf:";
+	cout << "\t Digite o cpf: ";
 	getline(cin, cpf);
-	cout << "\t Digite o endereco:";
+	cout << "\t Digite o endereco: ";
 	getline(cin, endereco);
-	cout << "\t Digite o fone:";
+	cout << "\t Digite o fone: ";
 	getline(cin, fone);
 
 	if (!b.checkCliente(cpf)) {
 
 		b.inserirCliente(Banco::Cliente(nome, cpf, endereco, fone));
-		cout << "\n\t Operacao realizada com sucesso ";
+		cout << "\n\t Operacao realizada com sucesso! ";
 	}
 
 	else {
 
-		cout << "\n\t Cliente ja existente ";
+		cout << "\n\t Cliente ja existente! ";
 	}
 
 	getch();
@@ -39,7 +39,7 @@ void Interface::criar_conta(Banco& b) {
 
 	cin.ignore();
 	cout << "\n\n\n\tCRIAR CONTA\n" << endl;
-	cout << "\t Digite o cpf do cliente:";
+	cout << "\t Digite o cpf do cliente: ";
 	cin >> cpf;
 
 	if (b.checkCliente(cpf)) {
@@ -56,7 +56,7 @@ void Interface::criar_conta(Banco& b) {
 	}
 
 	else
-		cout << "\n\t Cliente inexistente! ";
+		cout << "\n\t Cliente nao encontrado! ";
 
 	getch();
 }
@@ -67,7 +67,7 @@ void Interface::excluir_cliente(Banco& b) {
 
 	cin.ignore();
 	cout << "\n\n\n\tEXCLUIR CLIENTE\n" << endl;
-	cout << "\t Digite o cpf do cliente:";
+	cout << "\t Digite o cpf do cliente: ";
 	cin >> cpf;
 
 	if (b.checkCliente(cpf)) {
@@ -83,7 +83,7 @@ void Interface::excluir_cliente(Banco& b) {
 	}
 
 	else
-		cout << "\n\t Cliente inexistente! ";
+		cout << "\n\t Cliente nao encontrado! ";
 	
 	getch();
 }
@@ -104,7 +104,7 @@ void Interface::excluir_conta(Banco& b) {
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 
 	getch();
 }
@@ -127,7 +127,7 @@ void Interface::deposito(Banco& b) {
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 	
 	getch();
 }
@@ -158,7 +158,7 @@ void Interface::saque(Banco& b) {
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 
 	getch();
 }
@@ -205,7 +205,7 @@ void Interface::tarifa(Banco& b) {
 	
 	cin.ignore();
 	cout << "\n\n\n\tTARIFA\n" << endl;
-	cout << "\n\t Operacao realizada com sucesso ";
+	cout << "\n\t Operacao realizada com sucesso! ";
 	b.tarifa();
 
 	getch();
@@ -215,7 +215,7 @@ void Interface::CPMF(Banco& b) {
 
 	cin.ignore();
 	cout << "\n\n\n\tCMPF\n" << endl;
-	cout << "\n\t Operacao realizada com sucesso ";
+	cout << "\n\t Operacao realizada com sucesso! ";
 	b.CPMF();
 
 	getch();
@@ -236,14 +236,13 @@ void Interface::saldo(Banco& b) {
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 	
 	getch();
 }
 
 void Interface::extrato_mes(Banco& b) {
 
-	Data x;
 	int numeroconta;
 
 	vector<Banco::Conta> contas;
@@ -260,14 +259,14 @@ void Interface::extrato_mes(Banco& b) {
 		ext = b.extrato(numeroconta);
 
 		for (Banco::Conta::Movimentacao j : ext)
-			cout << "\n\t " << "R$" << fixed << setprecision(2) << j.Get_Valor() << " " << j.Get_Debito_Credito() << " " << j.Get_Descricao();		
+			cout << "\n\t " << "R$" << fixed << setprecision(2) << j.getValor() << " " << j.getDB() << " " << j.getDesc();		
 
 		cout << "\n\t ===================================================================";
 		cout << "\n\t Saldo: R$" << fixed << setprecision(2) << b.saldo(numeroconta);
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 
 	getch();
 }
@@ -297,14 +296,14 @@ void Interface::extrato_data_inicial(Banco& b) {
 		ext = b.extrato(conta, inicio);
 
 		for (Banco::Conta::Movimentacao j : ext)
-			cout << "\n\t " << "R$" << fixed << setprecision(2) << j.Get_Valor() << " " << j.Get_Debito_Credito() << " " << j.Get_Descricao();
+			cout << "\n\t " << "R$" << fixed << setprecision(2) << j.getValor() << " " << j.getDB() << " " << j.getDesc();
 
 		cout << "\n\t ===================================================================";
 		cout << "\n\t Saldo: R$" << fixed << setprecision(2) << b.saldo(conta);
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 
 
 	getch();
@@ -341,14 +340,14 @@ void Interface::extrato_data_inicial_final(Banco& b) {
 		ext = b.extrato(conta, inicio, fim);
 
 		for (Banco::Conta::Movimentacao j : ext)
-			cout << "\n\t " << "R$" << fixed << setprecision(2) << j.Get_Valor() << " " << j.Get_Debito_Credito() << " " << j.Get_Descricao();
+			cout << "\n\t " << "R$" << fixed << setprecision(2) << j.getValor() << " " << j.getDB() << " " << j.getDesc();
 
 		cout << "\n\t ===================================================================";
 		cout << "\n\t Saldo: R$" << fixed << setprecision(2) << b.saldo(conta);
 	}
 
 	else
-		cout << "\n\t Conta inexistente! ";
+		cout << "\n\t Conta nao encontrada! ";
 
 	getch();
 }
@@ -362,10 +361,10 @@ void Interface::listar_clientes(Banco& b) {
 
 	for (Banco::Cliente i : clientes) {
 
-		cout << "\n\t Nome: " << i.Get_nome();
-		cout << "\n\t CPF: " << i.Get_Cpf_cnpj();
-		cout << "\n\t Endereco: " << i.Get_Fone();
-		cout << "\n\t Telefone: " << i.Get_Endereco();
+		cout << "\n\t Nome: " << i.getNome();
+		cout << "\n\t CPF: " << i.getCPF();
+		cout << "\n\t Endereco: " << i.getFone();
+		cout << "\n\t Telefone: " << i.getEnd();
 		cout << "\n\t ===================================================================\n";
 	}
 
@@ -381,9 +380,9 @@ void Interface::listar_contas(Banco& b) {
 
 	for (Banco::Conta i : contas) {
 
-		cout << "\n\t Numero da conta: " << i.Get_Numero_conta();
-		cout << "\n\t CPF do Cliente: " << i.Get_cliente().Get_Cpf_cnpj();
-		cout << "\n\t Saldo: " << fixed << setprecision(2) << "R$" << i.Get_saldo();
+		cout << "\n\t Numero da conta: " << i.getNum();
+		cout << "\n\t CPF do Cliente: " << i.getDono().getCPF();
+		cout << "\n\t Saldo: " << fixed << setprecision(2) << "R$" << i.getSaldo();
 		cout << "\n\t ===================================================================\n";
 	}
 

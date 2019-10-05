@@ -2,154 +2,149 @@
 
 #define findcell(str1, str2, i) while(str1[i] != ',' && str1[i] != '\0'){str2 += str1[i++];}i++;
 
-int Banco::Conta::_Proximo_num_conta = 1;
+int Banco::Conta::proxNum = 1;
 
 Banco::Cliente::Cliente() {
 }
 
 Banco::Cliente::Cliente(const Cliente& copia) {
 
-	_Nome_cliente = copia._Nome_cliente;
-	_Cpf_cnpj = copia._Cpf_cnpj;
-	_Endereco = copia._Endereco;
-	_Fone = copia._Fone;
+	nomeCliente = copia.nomeCliente;
+	CPF = copia.CPF;
+	End = copia.End;
+	Fone = copia.Fone;
 }
 
 Banco::Cliente::Cliente(string nome, string cpf, string endereco, string fone) {
 
-	_Nome_cliente = nome;
-	_Cpf_cnpj = cpf;
-	_Endereco = endereco;
-	_Fone = fone;
+	nomeCliente = nome;
+	CPF = cpf;
+	End = endereco;
+	Fone = fone;
 }
 
-string Banco::Cliente::Get_nome() {
+string Banco::Cliente::getNome() {
 
-	return _Nome_cliente;
+	return nomeCliente;
 }
 
-string Banco::Cliente::Get_Cpf_cnpj() {
-	return _Cpf_cnpj;
+string Banco::Cliente::getCPF() {
+	return CPF;
 }
 
-string Banco::Cliente::Get_Endereco() {
-	return _Endereco;
+string Banco::Cliente::getEnd() {
+	return End;
 }
 
-string Banco::Cliente::Get_Fone() {
-	return _Fone;
+string Banco::Cliente::getFone() {
+	return Fone;
 }
 
-void Banco::Cliente::Set_Nome(string nome) {
-	_Nome_cliente = nome;
+void Banco::Cliente::setNome(string nome) {
+	nomeCliente = nome;
 }
 
-void Banco::Cliente::Set_Cpf_cnpj(string cpf) {
-	_Cpf_cnpj = cpf;
+void Banco::Cliente::SetCPF(string cpf) {
+	CPF = cpf;
 }
 
-void Banco::Cliente::Set_Endereco(string endereco) {
-	_Endereco = endereco;
+void Banco::Cliente::setEnd(string endereco) {
+	End = endereco;
 }
 
-void Banco::Cliente::Set_Fone(string fone) {
-	_Fone = fone;
+void Banco::Cliente::setFone(string fone) {
+	Fone = fone;
 }
 
 Banco::Conta::Conta() {
 
-	_Num_conta = NULL;
-	_Saldo = 0;
-	_Cliente = Cliente();
+	numConta = NULL;
+	Saldo = 0;
+	Dono = Cliente();
 }
 
 Banco::Conta::Conta(Banco::Cliente& cliente) {
 
-	_Num_conta = _Proximo_num_conta++;
-	_Cliente = cliente;
-	_Saldo = 0;
+	numConta = proxNum++;
+	Dono = cliente;
+	Saldo = 0;
 }
 
 Banco::Conta::Conta(int num, double saldo, Banco::Cliente& c) {
 
-	_Num_conta = num;
-	_Saldo = saldo;
-	_Cliente = c;
+	numConta = num;
+	Saldo = saldo;
+	Dono = c;
 }
 
-int Banco::Conta::Get_Numero_conta() {
-	return _Num_conta;
+int Banco::Conta::getNum() {
+	return numConta;
 }
 
-int Banco::Conta::Get_prox() {
-	return _Proximo_num_conta;
+int Banco::Conta::getProx() {
+	return proxNum;
 }
 
-void Banco::Conta::Set_prox(int num) {
+void Banco::Conta::setProx(int num) {
 
-	_Proximo_num_conta = num;
+	proxNum = num;
 }
 
-double Banco::Conta::Get_saldo() {
-	return _Saldo;
+double Banco::Conta::getSaldo() {
+	return Saldo;
 }
 
-Banco::Cliente Banco::Conta::Get_cliente() {
-	return _Cliente;
+Banco::Cliente Banco::Conta::getDono() {
+	return Dono;
 }
 
-bool Banco::Conta::Debitar(double valor, string descricao) {
+bool Banco::Conta::debitar(double valor, string descricao) {
 
-	if ((_Saldo - valor) < 0) {
-
-		return false;
-	}
-
-	else {
-
-		_Saldo -= valor;
-		_Movimentacoes.push_back(Movimentacao(descricao, 'D', valor));
-
+	if ((Saldo - valor) > 0) {
+		Saldo -= valor;
+		Movis.push_back(Movimentacao(descricao, 'D', valor));
 		return true;
 	}
+
+	return false;
 }
 
-void Banco::Conta::Creditar(double valor, string descricao) {
+void Banco::Conta::creditar(double valor, string descricao) {
 
-	_Saldo += valor;
-	_Movimentacoes.push_back(Movimentacao(descricao, 'C', valor));
+	Saldo += valor;
+	Movis.push_back(Movimentacao(descricao, 'C', valor));
 }
 
-void Banco::Conta::extrato(vector<Banco::Conta::Movimentacao> set) {
+void Banco::Conta::setExtrato(vector<Banco::Conta::Movimentacao> set) {
 
-	_Movimentacoes = set;
+	Movis = set;
 }
 
-vector<Banco::Conta::Movimentacao> Banco::Conta::extrato() {
+vector<Banco::Conta::Movimentacao> Banco::Conta::getExtrato() {
 
-	return _Movimentacoes;
+	return Movis;
 }
 
-vector<Banco::Conta::Movimentacao> Banco::Conta::extrato(Data inicio) {
+vector<Banco::Conta::Movimentacao> Banco::Conta::getExtrato(Data inicio) {
 
 	vector<Movimentacao> ext;
 
-	for (Movimentacao i : _Movimentacoes) {
+	for (Movimentacao i : Movis) {
 
-		if (difftime(inicio.time, i.Get_Data().time) > 0)
+		if (difftime(inicio.time, i.getDataMov().time) > 0)
 			ext.push_back(i);
 	}
 
 	return ext;
 }
 
-vector<Banco::Conta::Movimentacao> Banco::Conta::extrato(Data inicio, Data fim) {
+vector<Banco::Conta::Movimentacao> Banco::Conta::getExtrato(Data inicio, Data fim) {
 
 	vector<Movimentacao> ext;
 
-	for (Movimentacao i : _Movimentacoes) {
+	for (Movimentacao i : Movis) {
 
-		if ((difftime(inicio.time, i.Get_Data().time) > 0) && (difftime(i.Get_Data().time, fim.time) < 0))
+		if ((difftime(inicio.time, i.getDataMov().time) > 0) && (difftime(i.getDataMov().time, fim.time) < 0))
 			ext.push_back(i);
 	}
 
@@ -157,144 +152,108 @@ vector<Banco::Conta::Movimentacao> Banco::Conta::extrato(Data inicio, Data fim) 
 }
 
 Banco::Conta::Movimentacao::Movimentacao() {
-
-	_Data = obterData();
-	_Debito_Credito = 'N';
-	_Valor = 0;
+	
+	DB = 'N';
+	Valor = 0;
+	dataMov = obterData();	
 }
 
-Banco::Conta::Movimentacao::Movimentacao(string descricao, char dc, double valor) {
+Banco::Conta::Movimentacao::Movimentacao(string desc, char dc, double valor) {
 
-	_Data = obterData();
-	_Descricao = descricao;
-	_Debito_Credito = dc;
-	_Valor = valor;
+	DB = dc;
+	Valor = valor;
+	Desc = desc;
+	dataMov = obterData();
 }
 
-Banco::Conta::Movimentacao::Movimentacao(string descricao, char dc, double valor, Data data) {
+Banco::Conta::Movimentacao::Movimentacao(string desc, char dc, double valor, Data data) {
 
-	_Descricao = descricao;
-	_Debito_Credito = dc;
-	_Valor = valor;
-	_Data = data;
+	DB = dc;
+	Valor = valor;
+	Desc = desc;	
+	dataMov = data;
 }
 
-string Banco::Conta::Movimentacao::Get_Descricao() {
-
-	return _Descricao;
+string Banco::Conta::Movimentacao::getDesc() {
+	return Desc;
 }
 
-char Banco::Conta::Movimentacao::Get_Debito_Credito() {
-
-	return _Debito_Credito;
+char Banco::Conta::Movimentacao::getDB() {
+	return DB;
 }
 
-double Banco::Conta::Movimentacao::Get_Valor() {
-
-	return _Valor;
+double Banco::Conta::Movimentacao::getValor() {
+	return Valor;
 }
 
-Data Banco::Conta::Movimentacao::Get_Data() {
-	return _Data;
+Data Banco::Conta::Movimentacao::getDataMov() {
+	return dataMov;
 }
 
 Banco::Banco() {
-
 }
 
 Banco::Banco(string nome) {
-
 	_Banco = nome;
 }
 
 void Banco::inserirCliente(Cliente x) {
-
-	_Clientes.push_back(x);
+	Clientes.push_back(x);
 }
 
 void Banco::criarConta(Cliente& x) {
-
-	_Contas.push_back(Conta(x));
+	Contas.push_back(Conta(x));
 }
 
 void Banco::excluirCliente(string cpf) {
 
 	bool match = false;
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-		if (_Contas[i].Get_cliente().Get_Cpf_cnpj() == cpf)
-			match = true;
-	}
-
-	if (!match) {
-		for (unsigned int i = 0; i < _Clientes.size(); i++) {
-			if (_Clientes[i].Get_Cpf_cnpj() == cpf)
-				_Clientes.erase(_Clientes.begin() + i);
-		}
-	}
+	if (checkCliente(cpf))
+		Clientes.erase(Clientes.begin() + findCliente(cpf));
 }
 
 void Banco::excluirConta(int nConta) {
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-		if (_Contas[i].Get_Numero_conta() == nConta)
-			_Contas.erase(_Contas.begin() + i);
-	}
+	if (checkConta(nConta))
+		Contas.erase(Contas.begin() + findConta(nConta));
 }
 
 void Banco::deposito(int nConta, double valor) {
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-		if (_Contas[i].Get_Numero_conta() == nConta)
-			_Contas[i].Creditar(valor, "Deposito");
-	}
+	if (checkConta(nConta))
+		Contas[findConta(nConta)].creditar(valor, "Deposito");
 }
 
 bool Banco::saque(int nConta, double valor) {
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-		if (_Contas[i].Get_Numero_conta() == nConta) {
-			if (_Contas[i].Debitar(valor, "Saque"))
-				return true;
-			return false;
-		}		
-	}
+	if (checkConta(nConta)) {
+
+		Contas[findConta(nConta)].debitar(valor, "Saque");
+		return true;
+	}	
+
+	return false;
 }
 
 bool Banco::transferencia(int c1, int c2, double valor) {
 
-	int n1;
-	int n2;
-
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-
-		if (_Contas[i].Get_Numero_conta() == c1) {
-
-			n1 = i;
-
-			for (unsigned int i = 0; i < _Contas.size(); i++) {
-				
-				if (_Contas[i].Get_Numero_conta() == c2) {
-
-					n2 = i;
-
-					if (_Contas[n1].Debitar(valor, ("Transferencia para conta " + to_string(c1)))) {
-
-						_Contas[n2].Creditar(valor, ("Transferencia da conta " + to_string(c2)));
-						return true;
-					}
-
-					return false;
-				}				
+	if (checkConta(c1)) {
+		if (checkConta(c2)) {
+			if (Contas[findConta(c1)].debitar(valor, ("Transferencia para conta " + to_string(c1)))) {
+				Contas[findConta(c2)].creditar(valor, ("Transferencia da conta " + to_string(c2)));
+				return true;
 			}
-		}		
+		}
 	}
+
+	return false;
 }
 
 void Banco::tarifa() {
 
-	for (unsigned int i = 0; i < _Contas.size(); i++)
-		_Contas[i].Debitar(15, "Cobranca de tarifa");
+	for (unsigned int i = 0; i < Contas.size(); i++)
+		Contas[i].debitar(15, "Cobranca de tarifa");
 
 }
 
@@ -303,30 +262,27 @@ void Banco::CPMF() {
 	double tarifa;
 	Data now = obterData();
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
+	for (unsigned int i = 0; i < Contas.size(); i++) {
 
 		tarifa = 0;
 
-		for (Conta::Movimentacao i : _Contas[i].extrato()) {
+		for (Conta::Movimentacao i : Contas[i].getExtrato()) {
 
-			if (difftime(now.time, i.Get_Data().time) < 604800 && i.Get_Debito_Credito() == 'D')
-				tarifa += i.Get_Valor();
+			if (difftime(now.time, i.getDataMov().time) < 604800 && i.getDB() == 'D')
+				tarifa += i.getValor();
 		}
 
 		tarifa *= 0.0038;
 
-		_Contas[i].Debitar(tarifa, "Cobranca de CPMF");
+		Contas[i].debitar(tarifa, "Cobranca de CPMF");
 		
 	}
 }
 
 double Banco::saldo(int nConta) {
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-
-		if (_Contas[i].Get_Numero_conta() == nConta)
-			return _Contas[i].Get_saldo();
-	}
+	if (checkConta(nConta))
+		return Contas[findConta(nConta)].getSaldo();
 
 	return -1;
 }
@@ -338,12 +294,12 @@ vector<Banco::Conta::Movimentacao> Banco::extrato(int nConta) {
 	int ano = now.ano;
 
 	vector<Conta::Movimentacao>	x;
-	vector<Conta::Movimentacao> copy = _Contas[findConta(nConta)].extrato();
+	vector<Conta::Movimentacao> copy = Contas[findConta(nConta)].getExtrato();
 
 	if (checkConta(nConta)) {
 
 		for (Conta::Movimentacao i : copy)
-			if (i.Get_Data().mes == mes && i.Get_Data().ano == ano)
+			if (i.getDataMov().mes == mes && i.getDataMov().ano == ano)
 				x.push_back(i);	
 	}
 
@@ -359,7 +315,7 @@ vector<Banco::Conta::Movimentacao> Banco::extrato(int nConta, Data inicio) {
 
 	if (checkConta(nConta)) {
 
-		copy = _Contas[findConta(nConta)].extrato();
+		copy = Contas[findConta(nConta)].getExtrato();
 
 		for (Conta::Movimentacao i : copy)		
 			if (difftime(now.time, inicio.time) > 0)
@@ -378,7 +334,7 @@ vector<Banco::Conta::Movimentacao> Banco::extrato(int nConta, Data inicio, Data 
 
 	if (checkConta(nConta)) {
 
-		copy = _Contas[findConta(nConta)].extrato();
+		copy = Contas[findConta(nConta)].getExtrato();
 
 		for (Conta::Movimentacao i : copy)
 			if (difftime(now.time, inicio.time) > 0 && difftime(now.time, fim.time) < 0)
@@ -390,18 +346,18 @@ vector<Banco::Conta::Movimentacao> Banco::extrato(int nConta, Data inicio, Data 
 
 vector<Banco::Cliente> Banco::clientes() {
 
-	return _Clientes;
+	return Clientes;
 }
 
 vector<Banco::Conta> Banco::contas() {
 
-	return _Contas;
+	return Contas;
 }
 
 int Banco::findCliente(string cpf) {
 
-	for (unsigned int i = 0; i < _Clientes.size(); i++) {
-		if (_Clientes[i].Get_Cpf_cnpj() == cpf)
+	for (unsigned int i = 0; i < Clientes.size(); i++) {
+		if (Clientes[i].getCPF() == cpf)
 			return i;
 	}
 
@@ -410,8 +366,8 @@ int Banco::findCliente(string cpf) {
 
 int Banco::findCliente(Cliente x) {
 
-	for (unsigned int i = 0; i < _Clientes.size(); i++) {
-		if (_Clientes[i].Get_Cpf_cnpj() == x.Get_Cpf_cnpj())
+	for (unsigned int i = 0; i < Clientes.size(); i++) {
+		if (Clientes[i].getCPF() == x.getCPF())
 			return i;
 	}
 
@@ -420,8 +376,8 @@ int Banco::findCliente(Cliente x) {
 
 int Banco::findConta(int conta) {
 
-	for (unsigned int i = 0; i < _Contas.size(); i++) {
-		if (_Contas[i].Get_Numero_conta() == conta)
+	for (unsigned int i = 0; i < Contas.size(); i++) {
+		if (Contas[i].getNum() == conta)
 			return i;
 	}
 
@@ -430,8 +386,8 @@ int Banco::findConta(int conta) {
 
 bool Banco::checkCliente(string cpf) {
 
-	for (Cliente i : _Clientes)
-		if (i.Get_Cpf_cnpj() == cpf)
+	for (Cliente i : Clientes)
+		if (i.getCPF() == cpf)
 			return true;
 
 	return false;
@@ -439,8 +395,8 @@ bool Banco::checkCliente(string cpf) {
 
 bool Banco::checkCliente(Cliente x) {
 
-	for (Cliente i : _Clientes)
-		if (i.Get_Cpf_cnpj() == x.Get_Cpf_cnpj())
+	for (Cliente i : Clientes)
+		if (i.getCPF() == x.getCPF())
 			return true;
 
 	return false;
@@ -448,8 +404,8 @@ bool Banco::checkCliente(Cliente x) {
 
 bool Banco::checkConta(int conta) {
 
-	for (Conta i : _Contas)
-		if (i.Get_Numero_conta() == conta)
+	for (Conta i : Contas)
+		if (i.getNum() == conta)
 			return true;
 
 	return false;
@@ -457,9 +413,9 @@ bool Banco::checkConta(int conta) {
 
 bool Banco::checkConta(string cpf) {
 
-	for (Cliente i : _Clientes)
-		for (Conta j : _Contas)
-			if (i.Get_Cpf_cnpj() == j.Get_cliente().Get_Cpf_cnpj() && i.Get_Cpf_cnpj() == cpf)
+	for (Cliente i : Clientes)
+		for (Conta j : Contas)
+			if (i.getCPF() == j.getDono().getCPF() && i.getCPF() == cpf)
 				return true;
 
 	return false;
@@ -467,12 +423,12 @@ bool Banco::checkConta(string cpf) {
 
 Banco::Cliente* Banco::cliente(int i) {
 
-	return &(_Clientes[i]);
+	return &(Clientes[i]);
 }
 
 Banco::Conta* Banco::conta(int i) {
 
-	return &(_Contas[i]);
+	return &(Contas[i]);
 }
 
 void Banco::save(string file) {
@@ -480,31 +436,31 @@ void Banco::save(string file) {
 	ofstream save;
 	save.open(file, ofstream::out | ofstream::trunc);
 
-	for (Cliente i : _Clientes)
-		save << i.Get_nome() << "," << i.Get_Cpf_cnpj() << "," << i.Get_Fone() << "," << i.Get_Endereco() << endl;
+	for (Cliente i : Clientes)
+		save << i.getNome() << "," << i.getCPF() << "," << i.getFone() << "," << i.getEnd() << endl;
 
 	save << "-" << endl;
 
-	for (Conta i : _Contas)
-		save << i.Get_Numero_conta() << "," << i.Get_saldo() << "," << i.Get_cliente().Get_Cpf_cnpj() << endl;
+	for (Conta i : Contas)
+		save << i.getNum() << "," << i.getSaldo() << "," << i.getDono().getCPF() << endl;
 
 	save << "-" << endl;
 
-	if (_Contas.size() > 0)
-		save << _Contas[0].Get_prox() << endl;
+	if (Contas.size() > 0)
+		save << Contas[0].getProx() << endl;
 	else
 		save << "0" << endl;
 
 	save << "-" << endl;
 
-	for (Conta i : _Contas) {
+	for (Conta i : Contas) {
 		
-		vector<Conta::Movimentacao> x = i.extrato();
+		vector<Conta::Movimentacao> x = i.getExtrato();
 
-		save << i.Get_Numero_conta() << endl;
+		save << i.getNum() << endl;
 
 		for (Conta::Movimentacao j : x)
-			save << j.Get_Data().time << "," << j.Get_Valor() << "," << j.Get_Debito_Credito() << "," << j.Get_Descricao() << endl;
+			save << j.getDataMov().time << "," << j.getValor() << "," << j.getDB() << "," << j.getDesc() << endl;
 
 		save << endl;
 	}
@@ -520,6 +476,9 @@ void Banco::load(string file) {
 	string cell;
 
 	getline(load, line);
+
+	if (line == "-" || line.size() == 0)
+		return;
 
 	while (line != "-") {
 
@@ -545,19 +504,14 @@ void Banco::load(string file) {
 		vector<string> att;
 		i = 0;
 
-		for (int j = 0; j < 2; j++) {
+		for (int j = 0; j < 3; j++) {
 
 			findcell(line, cell, i);
 			att.push_back(cell);
 			cell.clear();
 		}
 
-		findcell(line, cell, i);
-		att.push_back(cell);
-
-		for (unsigned int j = 0; j < _Clientes.size(); j++)
-			if (_Clientes[j].Get_Cpf_cnpj() == cell)
-				_Contas.push_back(Conta(stoi(att[0]), stod(att[1]), _Clientes[j]));
+		Contas.push_back(Conta(stoi(att[0]), stod(att[1]), Clientes[findCliente(att[2])]));
 
 		cell.clear();
 		getline(load, line);
@@ -567,7 +521,7 @@ void Banco::load(string file) {
 		
 	if (line != "0") {
 
-		_Contas[0].Set_prox(stoi(line));
+		Contas[0].setProx(stoi(line));
 	}
 
 	getline(load, line);
@@ -586,8 +540,6 @@ void Banco::load(string file) {
 
 		while (line.size() > 0) {
 
-			//cout << n++ << endl;
-
 			i = 0;
 			vector<string> att;
 
@@ -604,7 +556,7 @@ void Banco::load(string file) {
 
 		cout << k << endl;
 
-		_Contas[k++].extrato(set);
+		Contas[k++].setExtrato(set);
 		set.clear();
 		getline(load, line);
 	}		
